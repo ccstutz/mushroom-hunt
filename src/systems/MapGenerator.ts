@@ -10,8 +10,7 @@ export interface GeneratedMap {
 
 export function generateMap(config: MapTypeConfig, seed?: number): GeneratedMap {
   const usedSeed = seed ?? Math.floor(Math.random() * 999999);
-  // Seed the noise by offsetting sample coordinates with the seed
-  const noise2D = createNoise2D(() => seededRandom(usedSeed));
+  const noise2D = createNoise2D(makeRng(usedSeed));
 
   const tiles: number[][] = [];
 
@@ -93,11 +92,6 @@ function makeRng(seed: number): () => number {
     t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
-}
-
-function seededRandom(seed: number): number {
-  const rng = makeRng(seed);
-  return rng();
 }
 
 /** Pick mushroom spawn positions on walkable tiles (not tree, not exit) */
